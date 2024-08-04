@@ -1,17 +1,18 @@
 table {
-    width: 100%;
-    border-collapse: collapse;
-  }
+  width: 100%;
+  border-collapse: collapse;
+}
   
-  th, td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #cdcdcd;
-  }
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #cdcdcd;
+  position: relative;
+}
   
-  th {
-    background-color: #f4f6f9;
-  }
+th {
+  background-color: #f4f6f9;
+}
   
 .logo {
     width: 30px;
@@ -58,4 +59,34 @@ td {
 
 .logo-th {
   text-align: center;
+}
+
+svg.info-icon {
+  font-size: 13px;
+  color: grey;
+  margin-left: 5px;
+}
+
+.th-flex {
+  display: flex;
+  align-items: center;
+}
+
+.contextual-menu {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  right: 30px;
+}
+
+.contextual-menu-item {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.contextual-menu-item:hover {
+  background-color: #f0f0f0;
 }

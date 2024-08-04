@@ -1,5 +1,5 @@
 .button-primary {
-  background-color: rgb(255, 255, 0);
+  background-color: rgb(238, 238, 3);
   color: #152b60;
   border: none;
   font-weight: 700;
@@ -10,7 +10,7 @@
 }
   
 .button-primary:hover {
-    background-color: yellow;
+    background-color: rgb(255, 255, 2);
 }
   
 .button-secondary {
@@ -28,3 +28,6 @@
   background-color: #dee0e3;
 }
   
+.larger {
+  width: 100%;
+}

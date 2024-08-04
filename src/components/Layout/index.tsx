@@ -10,12 +10,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const navigation = useNavigate();
   return (
     <>
-        <div onClick={()=>navigation('/')} className='header'>
-            <FaMoneyBillWave  className='logo-icon'/>
-            <h1 className="web-title">BANCO</h1>
+        <div className='header'>
+            <FaMoneyBillWave  onClick={()=>navigation('/')}  className='logo-icon'/>
+            <h1  onClick={()=>navigation('/')} className="web-title">BANCO</h1>
         </div>
-    
-      {children}
+        <div className='container'>
+          {children}
+        </div>
     </>
   );
 };

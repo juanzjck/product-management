@@ -1,6 +1,7 @@
 h1.web-title {
     text-align: center;
     font-size: 25px;
+    cursor: pointer;
 }
 
 .header {
@@ -10,9 +11,18 @@ h1.web-title {
     align-items: center;
     color: #152b60;
     height: 107px;
+
 }
 
 .logo-icon {
     font-size: 25px;
     margin-right: 10px;
+    cursor: pointer;
+}
+
+.container {
+    height: 85.2vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }

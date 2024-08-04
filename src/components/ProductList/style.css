@@ -1,6 +1,5 @@
 .product-list {
     padding: 20px;
-    padding: 20px;
     margin: auto;
     width: 89%;
 }
@@ -15,6 +14,10 @@
     padding: 26px;
     overflow-x: scroll;
     margin-top: 19px;
+    min-height: 440px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .product-list-controlers {
@@ -30,4 +33,8 @@
     align-items: center;
     margin-bottom: 23px;
     margin-top: -13px;
+}
+
+.actions {
+    cursor: pointer;
 }

@@ -87,3 +87,8 @@ button.button-secondary {
   font-weight: 800;
   color: white;
 }
+
+.successfully-link {
+  margin-left: 5px;
+  color: white;
+}

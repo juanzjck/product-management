@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.9% </span>
+                <span class="strong">88.57% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>30/33</span>
+                <span class='fraction'>31/35</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">71.42% </span>
+                <span class="strong">62.5% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>5/7</span>
+                <span class='fraction'>5/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.62% </span>
+                <span class="strong">88.23% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>29/32</span>
+                <span class='fraction'>30/34</span>
             </div>
         
             
@@ -144,7 +144,11 @@
 <a name='L79'></a><a href='#L79'>79</a>
 <a name='L80'></a><a href='#L80'>80</a>
 <a name='L81'></a><a href='#L81'>81</a>
-<a name='L82'></a><a href='#L82'>82</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -179,8 +183,8 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -191,6 +195,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -201,6 +206,9 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -260,19 +268,20 @@ const ProductList: React.FC = () =&gt; {
     const navigateToCreateProduct = <span class="fstat-no" title="function not covered" >() =</span>&gt; {
 <span class="cstat-no" title="statement not covered" >        navigate('/product/new');</span>
     };
-    useEffect(() =&gt; {
-    const fetchData = async () =&gt; {
-      try {
-        const productList = await fetchProductList();
-        setProducts(productList);
-      } catch (error) {
-<span class="cstat-no" title="statement not covered" >        console.error(error);</span>
-      } finally {
-        setLoading(false);
-      }
-    };
 &nbsp;
-    fetchData();
+    const fetchData = async () =&gt; {
+        try {
+          const productList = await fetchProductList();
+          setProducts(productList);
+        } catch (error) {
+<span class="cstat-no" title="statement not covered" >          console.error(error);</span>
+        } finally {
+          setLoading(false);
+        }
+      };
+    
+    useEffect(() =&gt; {
+        fetchData();
     }, []);
 &nbsp;
     const handleSizeChange = <span class="fstat-no" title="function not covered" >(v</span>alue: number | string) =&gt; {
@@ -283,6 +292,9 @@ const ProductList: React.FC = () =&gt; {
         product.name.toLowerCase().includes(searchTerm.toLowerCase())
     ).slice(0, selectedSize );
     
+    const deleteProduct = <span class="fstat-no" title="function not covered" >()=</span>&gt; {
+<span class="cstat-no" title="statement not covered" >        fetchData();</span>
+    }
     return (
         &lt;div className="product-list"&gt;
            &lt;div className='flex-actions'&gt;
@@ -293,7 +305,7 @@ const ProductList: React.FC = () =&gt; {
             {loading 
                 ?&lt;Skeleton className="skeleton" count={5} height={40} style={{ marginBottom: '10px' }} /&gt; 
                 :&lt;div className='product-list-content'&gt;
-                    &lt;ProductTable products={filteredProducts} /&gt; 
+                    &lt;ProductTable onDelete={deleteProduct} products={filteredProducts} /&gt; 
                 &lt;/div&gt;
             }
             &lt;div className='product-list-controlers'&gt;
@@ -313,7 +325,7 @@ export default ProductList;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-08-04T02:07:29.313Z
+                at 2024-08-04T22:04:07.960Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

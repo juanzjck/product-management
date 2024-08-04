@@ -1,166 +1,138 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import ProductForm from './index';
-import { createProduct, verifyProductId as mockVerifyProductId } from '../../services/productService';
-import '@testing-library/jest-dom';
+import { createProduct, updateProduct, fetchProductList } from '../../services/productService';
+import { BrowserRouter as Router } from 'react-router-dom';
 import '@testing-library/jest-dom/jest-globals';
+import '@testing-library/jest-dom';
 
 jest.mock('../../services/productService', () => ({
   createProduct: jest.fn(),
-  verifyProductId: jest.fn(),
+  updateProduct: jest.fn(),
+  fetchProductList: jest.fn(),
+}));
+
+const mockNavigate = jest.fn();
+
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockNavigate,
+  useParams: () => ({ id: '1' }),
 }));
 
 describe('ProductForm', () => {
-  beforeEach(() => {
-    (mockVerifyProductId as jest.Mock).mockResolvedValue(false);
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  const product = {
-    id: 'trc-crd6',
-    name: 'Tarjeta de credito',
-    description: 'Prueba 1, tiene que ser largo',
-    logo: 'https://www.visa.com.ec/dam/VCOM/regional/lac/SPA/Default/Pay%20With%20Visa/Tarjetas/visa-signature-400x225.jpg',
-    date_release: '2024-12-12',
-    date_revision: '2025-12-12'
+  const setup = (id?: string) => {
+    render(
+      <Router>
+        <ProductForm id={id} />
+      </Router>
+    );
   };
 
-  test('validates and submits the form successfully', async () => {
-    (mockVerifyProductId as jest.Mock).mockResolvedValue(false);
-    (createProduct as jest.Mock).mockResolvedValue(product);
+  test('renders the form with fetched product data for editing', async () => {
+    const mockProduct = {
+      id: '1',
+      name: 'Test Product',
+      description: 'Test Description',
+      logo: 'https://example.com/logo.png',
+      date_release: '2023-01-01',
+      date_revision: '2024-01-01',
+    };
+    (fetchProductList as jest.Mock).mockResolvedValue([mockProduct]);
 
-    render(<ProductForm />);
+    setup('1');
 
-    fireEvent.change(screen.getByLabelText(/ID del Producto/i), { target: { value: product.id } });
-    fireEvent.change(screen.getByLabelText(/Nombre del Producto/i), { target: { value: product.name } });
-    fireEvent.change(screen.getByLabelText(/Descripción/i), { target: { value: product.description } });
-    fireEvent.change(screen.getByLabelText(/URL del Logo/i), { target: { value: product.logo } });
-    fireEvent.change(screen.getByLabelText(/Fecha de Liberación/i), { target: { value: product.date_release } });
-
-    fireEvent.click(screen.getByText(/Agregar/i));
-
-    await waitFor(() => expect(mockVerifyProductId).toHaveBeenCalledWith(product.id));
-    await waitFor(() => expect(createProduct).toHaveBeenCalledWith(product));
-  
-    expect(screen.getByText(/El producto se creó exitosamente/i)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByDisplayValue('Test Product')).toBeInTheDocument();
+      expect(screen.getByDisplayValue('Test Description')).toBeInTheDocument();
+      expect(screen.getByDisplayValue('2023-01-01')).toBeInTheDocument();
+      expect(screen.getByDisplayValue('2024-01-01')).toBeInTheDocument();
+    });
   });
 
-  test('shows validation errors for required fields', async () => {
-    render(<ProductForm />);
+  test('calls updateProduct when the form is submitted with an existing product', async () => {
+    const mockProduct = {
+      id: '2',
+      name: 'Test Product',
+      description: 'Test Description',
+      logo: 'https://example.com/logo.png',
+      date_release: '2024-12-12',
+      date_revision: '2025-12-12',
+    };
+    (fetchProductList as jest.Mock).mockResolvedValue([mockProduct]);
+    (updateProduct as jest.Mock).mockResolvedValue({});
+
+    setup('2');
+
+    await waitFor(() => {
+      expect(screen.getByDisplayValue('Test Product')).toBeInTheDocument();
+    });
+
+    fireEvent.change(screen.getByLabelText(/Nombre del Producto/i), { target: { value: 'Updated Product' } });
+    fireEvent.click(screen.getByText(/Enviar/i));
+
+    await waitFor(() => {
+      expect(updateProduct).toHaveBeenCalledWith({
+        ...mockProduct,
+        name: 'Updated Product'
+      });
+    });
+  });
+
+  test('calls createProduct when the form is submitted with a new product', async () => {
+    (fetchProductList as jest.Mock).mockResolvedValue([]);
+    (createProduct as jest.Mock).mockResolvedValue({});
+    setup(undefined);
+    const mockProduct = {
+      id: '122',
+      name: 'Test Product',
+      description: 'Test Description',
+      logo: 'https://example.com/logo.png',
+      date_release: '2024-12-12',
+      date_revision: '2025-12-12',
+    };
+
+
+    fireEvent.change(screen.getByLabelText(/ID del Producto/i), { target: { value: mockProduct.id } });
+    fireEvent.change(screen.getByLabelText(/Nombre del Producto/i), { target: { value: mockProduct.name  } });
+    fireEvent.change(screen.getByLabelText(/Descripción/i), { target: { value: mockProduct.description } });
+    fireEvent.change(screen.getByLabelText(/URL del Logo/i), { target: { value: mockProduct.logo } });
+    fireEvent.change(screen.getByLabelText(/Fecha de Liberación/i), { target: { value:  mockProduct.date_release  } });
 
     fireEvent.click(screen.getByText(/Agregar/i));
 
     await waitFor(() => {
-      expect(screen.getByText(/ID es requerido/i)).toBeInTheDocument();
-      expect(screen.getByText(/Nombre es requerido/i)).toBeInTheDocument();
-      expect(screen.getByText(/Descripción es requerida/i)).toBeInTheDocument();
-      expect(screen.getByText(/Logo es requerido/i)).toBeInTheDocument();
-      expect(screen.getByText(/Fecha de liberación es requerida/i)).toBeInTheDocument();
-      expect(screen.getByText(/Fecha de revisión no válido!/i)).toBeInTheDocument();
+      expect(createProduct).toHaveBeenCalledWith(mockProduct);
     });
   });
 
- test('shows validation error for ID length', async () => {
-   (mockVerifyProductId as jest.Mock).mockResolvedValue(false);
+  test('Error handler - fields no valid', async () => {
+    (fetchProductList as jest.Mock).mockResolvedValue([]);
+    (createProduct as jest.Mock).mockResolvedValue({});
+    setup(undefined);
+    const mockProduct = {
+      id: '12',
+      name: 'asd',
+      description: '2da',
+      logo: '',
+      date_release: '1996-12-12',
+      date_revision: '',
+    };
 
-   render(<ProductForm />);
 
-   fireEvent.change(screen.getByLabelText(/ID del Producto/i), { target: { value: 'ab' } });
-   fireEvent.click(screen.getByText(/Agregar/i));
+    fireEvent.change(screen.getByLabelText(/ID del Producto/i), { target: { value: mockProduct.id } });
+    fireEvent.change(screen.getByLabelText(/Nombre del Producto/i), { target: { value: mockProduct.name  } });
+    fireEvent.change(screen.getByLabelText(/Descripción/i), { target: { value: mockProduct.description } });
+    fireEvent.change(screen.getByLabelText(/URL del Logo/i), { target: { value: mockProduct.logo } });
+    fireEvent.change(screen.getByLabelText(/Fecha de Liberación/i), { target: { value:  mockProduct.date_release  } });
 
-   await waitFor(() => {
-     expect(screen.getByText(/ID no válido!/i)).toBeInTheDocument();
-   });
- });
+    fireEvent.click(screen.getByText(/Agregar/i));
 
-  // test('shows validation error for duplicate ID', async () => {
-  //   (mockVerifyProductId as jest.Mock).mockResolvedValue(true);
-
-  //   render(<ProductForm />);
-
-  //   fireEvent.change(screen.getByLabelText(/ID del Producto/i), { target: { value: 'duplicate-id' } });
-  //   fireEvent.click(screen.getByText(/Agregar/i));
-
-  //   await waitFor(() => {
-  //     expect(screen.getByText(/ID ya existe/i)).toBeInTheDocument();
-  //   });
-  // });
-
-  // test('shows validation error for name length', async () => {
-  //   render(<ProductForm />);
-
-  //   fireEvent.change(screen.getByLabelText(/Nombre del Producto/i), { target: { value: 'abcd' } });
-  //   fireEvent.click(screen.getByText(/Agregar/i));
-
-  //   await waitFor(() => {
-  //     expect(screen.getByText(/Nombre no válido!/i)).toBeInTheDocument();
-  //   });
-  // });
-
-  // test('shows validation error for description length', async () => {
-  //   render(<ProductForm />);
-
-  //   fireEvent.change(screen.getByLabelText(/Descripción/i), { target: { value: 'short' } });
-  //   fireEvent.click(screen.getByText(/Agregar/i));
-
-  //   await waitFor(() => {
-  //     expect(screen.getByText(/Descripción no válido!/i)).toBeInTheDocument();
-  //   });
-  // });
-
-  // test('shows validation error for release date', async () => {
-  //   render(<ProductForm />);
-
-  //   const pastDate = new Date();
-  //   pastDate.setFullYear(pastDate.getFullYear() - 1);
-  //   const pastDateString = pastDate.toISOString().split('T')[0];
-
-  //   fireEvent.change(screen.getByLabelText(/Fecha de Liberación/i), { target: { value: pastDateString } });
-  //   fireEvent.click(screen.getByText(/Agregar/i));
-
-  //   await waitFor(() => {
-  //     expect(screen.getByText(/Fecha de liberación no válido!/i)).toBeInTheDocument();
-  //   });
-  // });
-
-  // test('shows validation error for revision date', async () => {
-  //   render(<ProductForm />);
-
-  //   const releaseDate = new Date();
-  //   const releaseDateString = releaseDate.toISOString().split('T')[0];
-  //   const incorrectRevisionDate = new Date(releaseDate);
-  //   incorrectRevisionDate.setFullYear(releaseDate.getFullYear() + 2);
-  //   const incorrectRevisionDateString = incorrectRevisionDate.toISOString().split('T')[0];
-
-  //   fireEvent.change(screen.getByLabelText(/Fecha de Liberación/i), { target: { value: releaseDateString } });
-  //   fireEvent.change(screen.getByLabelText(/Fecha de Revisión/i), { target: { value: incorrectRevisionDateString } });
-  //   fireEvent.click(screen.getByText(/Agregar/i));
-
-  //   await waitFor(() => {
-  //     expect(screen.getByText(/Fecha de revisión no válido!/i)).toBeInTheDocument();
-  //   });
-  // });
-
-  // test('resets the form when clicking the Reiniciar button', async () => {
-  //   render(<ProductForm />);
-
-  //   fireEvent.change(screen.getByLabelText(/ID del Producto/i), { target: { value: 'trc-crd6' } });
-  //   fireEvent.change(screen.getByLabelText(/Nombre del Producto/i), { target: { value: 'Tarjeta de credito' } });
-  //   fireEvent.change(screen.getByLabelText(/Descripción/i), { target: { value: 'Prueba 1' } });
-  //   fireEvent.change(screen.getByLabelText(/URL del Logo/i), { target: { value: 'https://example.com/logo.png' } });
-  //   fireEvent.change(screen.getByLabelText(/Fecha de Liberación/i), { target: { value: '2023-02-01' } });
-
-  //   fireEvent.click(screen.getByText(/Reiniciar/i));
-
-  //   await waitFor(() => {
-  //     expect(screen.getByLabelText(/ID del Producto/i)).toHaveValue('');
-  //     expect(screen.getByLabelText(/Nombre del Producto/i)).toHaveValue('');
-  //     expect(screen.getByLabelText(/Descripción/i)).toHaveValue('');
-  //     expect(screen.getByLabelText(/URL del Logo/i)).toHaveValue('');
-  //     expect(screen.getByLabelText(/Fecha de Liberación/i)).toHaveValue('');
-  //     expect(screen.getByLabelText(/Fecha de Revisión/i)).toHaveValue('');
-  //   });
-  // });
+    await waitFor(() => {
+      expect(screen.getAllByText("ID no válido!")).toHaveLength(1);
+      expect(screen.getAllByText("Nombre no válido!")).toHaveLength(1);
+      expect(screen.getAllByText("Descripción no válida!")).toHaveLength(1);
+      expect(screen.getAllByText("Fecha de liberación no válida!")).toHaveLength(1);
+      expect(screen.getAllByText("Este campo es requerido")).toHaveLength(1);
+    });
+  });
 });

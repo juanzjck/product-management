@@ -38,3 +38,24 @@ export const verifyProductId = async (id: string): Promise<boolean> => {
   const data = await response.json();
   return data;
 };
+
+export const deleteProduct = async (productId: string): Promise<void> => {
+  const response = await fetch(`${baseUrl}/bp/products?id=${productId}`, {
+    ...headers,
+    method: 'DELETE'
+  });
+  if (!response.ok) {
+    throw new Error('Failed to delete product');
+  }
+};
+
+export const updateProduct = async (product: Product): Promise<void> => {
+  const response = await fetch(`${baseUrl}/bp/products`, {
+    method: 'PUT',
+    ...headers,
+    body: JSON.stringify(product)
+  });
+  if (!response.ok) {
+    throw new Error('Failed to update product');
+  }
+};

@@ -33,19 +33,20 @@ const ProductList: React.FC = () => {
     const navigateToCreateProduct = () => {
         navigate('/product/new');
     };
-    useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const productList = await fetchProductList();
-        setProducts(productList);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
 
-    fetchData();
+    const fetchData = async () => {
+        try {
+          const productList = await fetchProductList();
+          setProducts(productList);
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setLoading(false);
+        }
+      };
+    
+    useEffect(() => {
+        fetchData();
     }, []);
 
     const handleSizeChange = (value: number | string) => {
@@ -56,6 +57,9 @@ const ProductList: React.FC = () => {
         product.name.toLowerCase().includes(searchTerm.toLowerCase())
     ).slice(0, selectedSize );
     
+    const deleteProduct = ()=> {
+        fetchData();
+    }
     return (
         <div className="product-list">
            <div className='flex-actions'>
@@ -66,7 +70,7 @@ const ProductList: React.FC = () => {
             {loading 
                 ?<Skeleton className="skeleton" count={5} height={40} style={{ marginBottom: '10px' }} /> 
                 :<div className='product-list-content'>
-                    <ProductTable products={filteredProducts} /> 
+                    <ProductTable onDelete={deleteProduct} products={filteredProducts} /> 
                 </div>
             }
             <div className='product-list-controlers'>
