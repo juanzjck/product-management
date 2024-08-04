@@ -1,0 +1,89 @@
+.product-form {
+  width: 100%;
+  max-width: 600px;
+  margin: auto;
+
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+}
+
+.product-form h2 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.product-form .form-group {
+  margin-bottom: 15px;
+}
+
+.product-form .form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.product-form .form-group input,
+.product-form .form-group textarea,
+.product-form .form-group select {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.product-form .error {
+  color: red;
+  margin-top: 10px;
+}
+
+.form-header {
+  border-bottom: solid 1px black ;
+}
+
+.form-container {
+  padding: 40px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.flex-actions-cender {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 23px;
+  margin-top: -13px;
+}
+
+.product-form .form-group {
+  width: 50%;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+
+input,  textarea {
+  height: 40px;
+  padding: 10px;
+  border: solid 2px #dfe1e3;
+  border-radius: 2.5px;
+}
+
+button.button-secondary {
+  margin-right: 40px;
+}
+
+.error-input {
+  border: 1px solid red;
+}
+
+.form-group {
+  height: 111px;
+}
+
+.successfully {
+  background-color: green;
+  text-align: center;
+  padding: 20px;
+  font-weight: 800;
+  color: white;
+}

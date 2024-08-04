@@ -1,0 +1,18 @@
+h1.web-title {
+    text-align: center;
+    font-size: 25px;
+}
+
+.header {
+    background: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #152b60;
+    height: 107px;
+}
+
+.logo-icon {
+    font-size: 25px;
+    margin-right: 10px;
+}

@@ -1,0 +1,33 @@
+.product-list {
+    padding: 20px;
+    padding: 20px;
+    margin: auto;
+    width: 89%;
+}
+  
+.results-count {
+    margin-top: 10px;
+    text-align: left;
+}
+
+.product-list-content {
+    background: white;
+    padding: 26px;
+    overflow-x: scroll;
+    margin-top: 19px;
+}
+
+.product-list-controlers {
+    background: white;
+    padding: 26px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.flex-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 23px;
+    margin-top: -13px;
+}

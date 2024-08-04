@@ -1,0 +1,16 @@
+.custom-select {
+    margin-bottom: 15px;
+}
+  
+.custom-select label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+  
+.custom-select select {
+  width: 70px;
+  padding: 5px 0px;
+  text-align: center;
+}
+  
